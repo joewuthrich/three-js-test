@@ -1,9 +1,13 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
+import { ROAD_TILE_COUNT } from "../lib/contants";
 
-export function createBuildings(scene: THREE.Scene) {
+export function createBuildings(
+  scene: THREE.Scene,
+  camera: THREE.PerspectiveCamera
+) {
   const loader = new GLTFLoader();
-  const roadTiles: THREE.Group<THREE.Object3DEventMap>[] = [];
+  const buildings: THREE.Group<THREE.Object3DEventMap>[] = [];
 
   const randomBuilding = () => {
     const buildings = [
@@ -15,7 +19,7 @@ export function createBuildings(scene: THREE.Scene) {
     return buildings[Math.floor(Math.random() * buildings.length)];
   };
 
-  for (let i = 0; i < 17; i++) {
+  for (let i = 0; i < ROAD_TILE_COUNT; i++) {
     loader.load(randomBuilding(), (gltf) => {
       const tile = gltf.scene;
       tile.position.z = -i * 4.8;
@@ -25,11 +29,11 @@ export function createBuildings(scene: THREE.Scene) {
       tile.rotation.y = Math.PI / 2 + Math.PI;
 
       scene.add(tile);
-      roadTiles.push(tile);
+      buildings.push(tile);
     });
   }
 
-  for (let i = 0; i < 17; i++) {
+  for (let i = 0; i < ROAD_TILE_COUNT; i++) {
     loader.load(randomBuilding(), (gltf) => {
       const tile = gltf.scene;
       tile.position.z = -i * 4.8;
@@ -39,9 +43,19 @@ export function createBuildings(scene: THREE.Scene) {
       tile.rotation.y = Math.PI / 2;
 
       scene.add(tile);
-      roadTiles.push(tile);
+      buildings.push(tile);
     });
   }
 
-  return roadTiles;
+  return function tick() {
+    const speed = 0.1;
+
+    buildings.forEach((tile) => {
+      tile.position.z += speed;
+
+      if (tile.position.z > camera.position.z) {
+        tile.position.z -= ROAD_TILE_COUNT * 4.8;
+      }
+    });
+  };
 }

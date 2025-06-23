@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { createRoad } from "./scene/createRoad";
 import { createBuildings } from "./scene/createBuildings";
+import { createCharacter } from "./character/character";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -15,37 +16,21 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
-scene.add(new THREE.GridHelper(20, 20));
-scene.add(new THREE.AxesHelper(3));
-
 scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.8));
 const dir = new THREE.DirectionalLight(0xffffff, 1);
 dir.position.set(5, 10, 2);
 scene.add(dir);
 
-scene.add(new THREE.DirectionalLightHelper(dir));
+const tickRoad = createRoad(scene, camera);
+const tickBuildings = createBuildings(scene, camera);
+const tickCharacter = createCharacter(scene);
 
-const roadTiles = createRoad(scene);
-const buildingTiles = createBuildings(scene);
-
+const clock = new THREE.Clock();
 function loop() {
-  const speed = 0.1;
-
-  roadTiles.forEach((tile) => {
-    tile.position.z += speed;
-
-    if (tile.position.z > camera.position.z) {
-      tile.position.z -= roadTiles.length * 4.8;
-    }
-  });
-
-  buildingTiles.forEach((tile) => {
-    tile.position.z += speed;
-
-    if (tile.position.z > camera.position.z) {
-      tile.position.z -= roadTiles.length * 4.8;
-    }
-  });
+  const delta = clock.getDelta();
+  tickCharacter(delta);
+  tickRoad();
+  tickBuildings();
 
   requestAnimationFrame(loop);
   renderer.render(scene, camera);
