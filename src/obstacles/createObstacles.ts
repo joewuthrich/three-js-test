@@ -12,14 +12,16 @@ export function createObstacles(
 
   const randomObstacle = () => {
     const obstacleList = [
-      "/models/obstacles/firetruck.glb",
-      "/models/obstacles/garbage_truck.glb",
-      "/models/obstacles/hatchback_sports.glb",
-      "/models/obstacles/police.glb",
-      "/models/obstacles/sedan-sports.glb",
-      "/models/obstacles/truck.glb",
+      "models/obstacles/firetruck.glb",
+      "models/obstacles/hatchback-sports.glb",
+      "models/obstacles/police.glb",
+      "models/obstacles/sedan-sports.glb",
+      "models/obstacles/truck.glb",
     ];
-    return obstacleList[Math.floor(Math.random() * obstacleList.length)];
+    return (
+      import.meta.env.BASE_URL +
+      obstacleList[Math.floor(Math.random() * obstacleList.length)]
+    );
   };
 
   const randomLane = () => {

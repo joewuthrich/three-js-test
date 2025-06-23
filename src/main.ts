@@ -18,15 +18,18 @@ import {
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 
 const rgbe = new RGBELoader();
-rgbe.load("/sky/kloppenheim_06_puresky_1k.hdr", (hdrTex) => {
-  const pmrem = new PMREMGenerator(renderer);
-  const envMap = pmrem.fromEquirectangular(hdrTex).texture;
+rgbe.load(
+  import.meta.env.BASE_URL + "sky/kloppenheim_06_puresky_1k.hdr",
+  (hdrTex) => {
+    const pmrem = new PMREMGenerator(renderer);
+    const envMap = pmrem.fromEquirectangular(hdrTex).texture;
 
-  scene.background = envMap;
-  scene.backgroundIntensity = 1.5;
-  hdrTex.dispose();
-  pmrem.dispose();
-});
+    scene.background = envMap;
+    scene.backgroundIntensity = 1.5;
+    hdrTex.dispose();
+    pmrem.dispose();
+  }
+);
 
 const state: {
   gameState: GameState;

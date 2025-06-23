@@ -12,12 +12,15 @@ export function createCharacter(scene: THREE.Scene) {
 
   const getRandomCharacter = () => {
     const characters = [
-      "/models/characters/character-male-f.glb",
-      "/models/characters/character-female-d.glb",
-      "/models/characters/character-male-c.glb",
+      "models/characters/character-male-f.glb",
+      "models/characters/character-female-d.glb",
+      "models/characters/character-male-c.glb",
     ];
 
-    return characters[Math.floor(Math.random() * characters.length)];
+    return (
+      import.meta.env.BASE_URL +
+      characters[Math.floor(Math.random() * characters.length)]
+    );
   };
 
   loader.load(getRandomCharacter(), (gltf) => {

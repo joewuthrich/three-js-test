@@ -12,13 +12,16 @@ export function createBuildings(
 
   const randomBuilding = () => {
     const buildings = [
-      "/models/buildings/building-window-awnings.glb",
-      "/models/buildings/building-window-door-window.glb",
-      "/models/buildings/building-sample-tower-c.glb",
-      "/models/buildings/building-sample-tower-d.glb",
-      "/models/buildings/building-windows.glb",
+      "models/buildings/building-window-awnings.glb",
+      "models/buildings/building-window-door-window.glb",
+      "models/buildings/building-sample-tower-c.glb",
+      "models/buildings/building-sample-tower-d.glb",
+      "models/buildings/building-windows.glb",
     ];
-    return buildings[Math.floor(Math.random() * buildings.length)];
+    return (
+      import.meta.env.BASE_URL +
+      buildings[Math.floor(Math.random() * buildings.length)]
+    );
   };
 
   for (let i = 0; i < ROAD_TILE_COUNT; i++) {
