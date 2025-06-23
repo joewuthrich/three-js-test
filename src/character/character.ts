@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export function createCharacter(scene: THREE.Scene) {
+  const ROLL = "sit";
+
   const loader = new GLTFLoader();
   const group = new THREE.Group();
   scene.add(group);
@@ -20,6 +22,11 @@ export function createCharacter(scene: THREE.Scene) {
       console.log("Loaded animation:", clip.name);
       actions[clip.name] = mixer.clipAction(clip);
     });
+
+    if (actions[ROLL]) {
+      const action = actions[ROLL];
+      action.setLoop(THREE.LoopOnce, 1).clampWhenFinished = true;
+    }
 
     play("sprint");
   });
