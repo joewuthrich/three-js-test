@@ -10,9 +10,13 @@ import type { GameState } from "./lib/contants";
 const state: {
   gameState: GameState;
   score: number;
+  highScore: number;
+  speed: number;
 } = {
   gameState: "waiting",
   score: 0,
+  highScore: 0,
+  speed: 0.1,
 };
 
 const INTRO_DURATION = 1.5;
@@ -38,13 +42,13 @@ const dir = new THREE.DirectionalLight(0xffffff, 1);
 dir.position.set(5, 10, 2);
 scene.add(dir);
 
-const tickRoad = createRoad(scene, camera);
-const tickBuildings = createBuildings(scene, camera);
+const tickRoad = createRoad(scene, camera, state);
+const tickBuildings = createBuildings(scene, camera, state);
 const {
   tick: tickObstacles,
   obstacles,
   resetObstacles,
-} = createObstacles(scene, camera);
+} = createObstacles(scene, camera, state);
 
 const {
   play: playCharacterAnimation,
@@ -64,13 +68,11 @@ const startGame = () => {
   }
 
   state.gameState = "intro";
-
   playCharacterAnimation("sprint");
 
   setTimeout(() => {
     state.gameState = "running";
-    playCharacterAnimation("sprint");
-  }, 1000);
+  }, 1500);
 };
 
 const tickControls = createRunnerControls(
@@ -127,10 +129,17 @@ function loop() {
     tickIntro(delta);
   }
 
+  state.speed = state.speed + 0.00001;
+
   tickRoad();
   tickBuildings();
   tickControls(delta);
   tickObstacles();
+
+  state.score += 0.05 * 1 + state.speed;
+  document.getElementById("score")!.textContent = `Score: ${state.score.toFixed(
+    0
+  )}`;
 
   detectCollisions(characterGroup, obstacles, () => {
     if (state.gameState === "running") {
@@ -140,13 +149,19 @@ function loop() {
       setTimeout(() => {
         state.gameState = "crashed";
       }, 1500);
+
+      characterGroup.position.y = 0;
+
+      state.speed = 0.1;
+
+      if (state.score > state.highScore) {
+        state.highScore = state.score;
+        document.getElementById(
+          "highscore"
+        )!.textContent = `High Score: ${state.highScore.toFixed(0)}`;
+      }
     }
   });
-
-  state.score += 0.05;
-  document.getElementById("score")!.textContent = `Score: ${state.score.toFixed(
-    0
-  )}`;
 
   requestAnimationFrame(loop);
   renderer.render(scene, camera);

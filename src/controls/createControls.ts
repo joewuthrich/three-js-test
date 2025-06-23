@@ -29,7 +29,7 @@ export function createRunnerControls(
   const pressed: Record<string, boolean> = {};
 
   addEventListener("keydown", (e) => {
-    if (gameState.gameState !== "running") {
+    if (gameState.gameState !== "running" && gameState.gameState !== "intro") {
       startGame();
       return;
     }
@@ -48,9 +48,9 @@ export function createRunnerControls(
         break;
 
       case "ArrowUp":
-        if (state === "jump") return;
+        if (state === "jump" || y !== 0) return;
 
-        vy = 9;
+        vy = 7;
         state = "jump";
         play("jump");
         break;

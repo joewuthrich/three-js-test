@@ -4,7 +4,8 @@ import { ROAD_TILE_COUNT } from "../lib/contants";
 
 export function createRoad(
   scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera,
+  state: { speed: number }
 ) {
   const loader = new GLTFLoader();
   const roadTiles: THREE.Group<THREE.Object3DEventMap>[] = [];
@@ -23,10 +24,8 @@ export function createRoad(
   }
 
   return function tick() {
-    const speed = 0.1;
-
     roadTiles.forEach((tile) => {
-      tile.position.z += speed;
+      tile.position.z += state.speed;
 
       if (tile.position.z > camera.position.z + 5) {
         tile.position.z -= ROAD_TILE_COUNT * 4.8;

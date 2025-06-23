@@ -4,7 +4,8 @@ import { LANES, ROAD_TILE_COUNT } from "../lib/contants";
 
 export function createObstacles(
   scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera,
+  state: { speed: number }
 ) {
   const loader = new GLTFLoader();
   const obstacles: THREE.Group<THREE.Object3DEventMap>[] = [];
@@ -26,12 +27,16 @@ export function createObstacles(
   };
 
   for (let i = 0; i < ROAD_TILE_COUNT; i++) {
-    loader.load(randomObstacle(), (gltf) => {
+    const obstacle = randomObstacle();
+
+    loader.load(obstacle, (gltf) => {
       const tile = gltf.scene;
       tile.position.z = -i * 4.8 - 30;
       tile.position.x = randomLane();
 
       tile.scale.setScalar(1);
+
+      tile.userData.type = obstacle;
 
       scene.add(tile);
 
@@ -51,10 +56,8 @@ export function createObstacles(
   }
 
   function tick() {
-    const speed = 0.1;
-
     obstacles.forEach((tile) => {
-      tile.position.z += speed;
+      tile.position.z += state.speed;
 
       if (tile.position.z > camera.position.z) {
         tile.position.z -= ROAD_TILE_COUNT * 4.8 - 30;

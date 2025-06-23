@@ -1,4 +1,4 @@
-import { Box3, Group } from "three";
+import { Box3, Group, Vector3 } from "three";
 import type { Object3DEventMap, Object3D } from "three";
 
 const playerBB = new Box3();
@@ -11,11 +11,17 @@ export function detectCollisions(
 ) {
   playerBB.setFromObject(player);
   // Player bounding box is far too big, perhaps due to animations
-  const hitBox = playerBB.clone().expandByScalar(-0.7);
+  const hitBox = playerBB.clone().expandByScalar(-0.8);
 
   for (const obs of obstacleList) {
     obstacleBB.setFromObject(obs);
-    if (hitBox.intersectsBox(obstacleBB)) {
+
+    const hitBoxObstacle =
+      obs.userData.type === "/models/obstacles/firetruck.glb"
+        ? obstacleBB.clone().expandByVector(new Vector3(0, 1, 0))
+        : obstacleBB.clone();
+
+    if (hitBox.intersectsBox(hitBoxObstacle)) {
       setCrashed();
       break;
     }
