@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export function createCharacter(scene: THREE.Scene) {
-  const ROLL = "sit";
-
   const loader = new GLTFLoader();
   const group = new THREE.Group();
   scene.add(group);
@@ -19,16 +17,16 @@ export function createCharacter(scene: THREE.Scene) {
     group.add(model);
 
     gltf.animations.forEach((clip) => {
-      console.log("Loaded animation:", clip.name);
       actions[clip.name] = mixer.clipAction(clip);
     });
 
-    if (actions[ROLL]) {
-      const action = actions[ROLL];
-      action.setLoop(THREE.LoopOnce, 1).clampWhenFinished = true;
-    }
+    const sitAnimation = actions["sit"];
+    sitAnimation.setLoop(THREE.LoopOnce, 1).clampWhenFinished = true;
 
-    play("sprint");
+    const dieAnimation = actions["die"];
+    dieAnimation.setLoop(THREE.LoopOnce, 1).clampWhenFinished = true;
+
+    play("idle");
   });
 
   function play(name: string, fade = 0.25) {

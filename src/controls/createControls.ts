@@ -1,12 +1,17 @@
 import * as THREE from "three";
 import { clamp } from "three/src/math/MathUtils.js";
-import { LANES } from "../lib/contants";
+import { LANES, type GameState } from "../lib/contants";
 
 type RunnerState = "sprint" | "jump" | "roll";
 
 export function createRunnerControls(
   player: THREE.Object3D,
-  play: (n: string) => void
+  play: (n: string) => void,
+  gameState: {
+    gameState: GameState;
+    score: number;
+  },
+  startGame: () => void
 ) {
   const GRAVITY = 20;
   const FAST_FALL = -35;
@@ -24,6 +29,11 @@ export function createRunnerControls(
   const pressed: Record<string, boolean> = {};
 
   addEventListener("keydown", (e) => {
+    if (gameState.gameState !== "running") {
+      startGame();
+      return;
+    }
+
     if (pressed[e.code]) return;
     pressed[e.code] = true;
 

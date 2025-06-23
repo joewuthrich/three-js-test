@@ -8,10 +8,24 @@
   </head>
   <body>
     <div id="app"></div>
+    <div id="info">
+      <div id="score" style="margin-bottom: 5px">Score: 0</div>
+      <div id="coins">Coins: 0</div>
+    </div>
     <style>
       body {
         margin: 0;
         overflow: hidden;
+      }
+
+      #info {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        font: bold 24px/1 sans-serif;
+        color: #fff;
+        text-shadow: 0 0 6px #000;
+        pointer-events: none;
       }
     </style>
     <script type="module" src="/src/main.ts"></script>

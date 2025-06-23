@@ -17,7 +17,6 @@ export function createObstacles(
       "/models/obstacles/police.glb",
       "/models/obstacles/sedan-sports.glb",
       "/models/obstacles/truck.glb",
-      "/models/obstacles/cone.glb",
     ];
     return obstacleList[Math.floor(Math.random() * obstacleList.length)];
   };
@@ -29,12 +28,13 @@ export function createObstacles(
   for (let i = 0; i < ROAD_TILE_COUNT; i++) {
     loader.load(randomObstacle(), (gltf) => {
       const tile = gltf.scene;
-      tile.position.z = -i * 4.8;
+      tile.position.z = -i * 4.8 - 30;
       tile.position.x = randomLane();
 
       tile.scale.setScalar(1);
 
       scene.add(tile);
+
       obstacles.push(tile);
     });
   }
