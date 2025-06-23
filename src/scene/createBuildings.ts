@@ -22,7 +22,7 @@ export function createBuildings(
   for (let i = 0; i < ROAD_TILE_COUNT; i++) {
     loader.load(randomBuilding(), (gltf) => {
       const tile = gltf.scene;
-      tile.position.z = -i * 4.8;
+      tile.position.z = -i * 4.8 + 5;
       tile.position.x = 5.5;
 
       tile.scale.setScalar(5);
@@ -36,7 +36,7 @@ export function createBuildings(
   for (let i = 0; i < ROAD_TILE_COUNT; i++) {
     loader.load(randomBuilding(), (gltf) => {
       const tile = gltf.scene;
-      tile.position.z = -i * 4.8;
+      tile.position.z = -i * 4.8 + 5;
       tile.position.x = -5.5;
 
       tile.scale.setScalar(5);
@@ -53,7 +53,7 @@ export function createBuildings(
     buildings.forEach((tile) => {
       tile.position.z += speed;
 
-      if (tile.position.z > camera.position.z) {
+      if (tile.position.z > camera.position.z + 5) {
         tile.position.z -= ROAD_TILE_COUNT * 4.8;
       }
     });

@@ -39,6 +39,17 @@ export function createObstacles(
     });
   }
 
+  function resetObstacles() {
+    let i = 0;
+
+    obstacles.forEach((tile) => {
+      tile.position.z = -i * 4.8 - 30;
+      tile.position.x = randomLane();
+
+      i++;
+    });
+  }
+
   function tick() {
     const speed = 0.1;
 
@@ -46,10 +57,10 @@ export function createObstacles(
       tile.position.z += speed;
 
       if (tile.position.z > camera.position.z) {
-        tile.position.z -= ROAD_TILE_COUNT * 4.8;
+        tile.position.z -= ROAD_TILE_COUNT * 4.8 - 30;
       }
     });
   }
 
-  return { tick, obstacles };
+  return { tick, obstacles, resetObstacles };
 }

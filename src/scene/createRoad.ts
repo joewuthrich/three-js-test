@@ -28,7 +28,7 @@ export function createRoad(
     roadTiles.forEach((tile) => {
       tile.position.z += speed;
 
-      if (tile.position.z > camera.position.z) {
+      if (tile.position.z > camera.position.z + 5) {
         tile.position.z -= ROAD_TILE_COUNT * 4.8;
       }
     });
