@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { createRoad } from "./scene/createRoad";
 import { createBuildings } from "./scene/createBuildings";
 import { createCharacter } from "./character/character";
+import { createRunnerControls } from "./controls/controls";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -23,7 +24,15 @@ scene.add(dir);
 
 const tickRoad = createRoad(scene, camera);
 const tickBuildings = createBuildings(scene, camera);
-const tickCharacter = createCharacter(scene);
+const {
+  play: playCharacterAnimation,
+  group: characterGroup,
+  tick: tickCharacter,
+} = createCharacter(scene);
+const tickControls = createRunnerControls(
+  characterGroup,
+  playCharacterAnimation
+);
 
 const clock = new THREE.Clock();
 function loop() {
@@ -31,6 +40,7 @@ function loop() {
   tickCharacter(delta);
   tickRoad();
   tickBuildings();
+  tickControls(delta);
 
   requestAnimationFrame(loop);
   renderer.render(scene, camera);

@@ -17,6 +17,7 @@ export function createCharacter(scene: THREE.Scene) {
     group.add(model);
 
     gltf.animations.forEach((clip) => {
+      console.log("Loaded animation:", clip.name);
       actions[clip.name] = mixer.clipAction(clip);
     });
 
@@ -31,7 +32,9 @@ export function createCharacter(scene: THREE.Scene) {
     current = next;
   }
 
-  return function tick(delta: number) {
-    mixer.update(delta);
+  return {
+    group,
+    play,
+    tick: (delta: number) => mixer.update(delta),
   };
 }
