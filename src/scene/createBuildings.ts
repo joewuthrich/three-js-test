@@ -16,6 +16,7 @@ export function createBuildings(
       "/models/buildings/building-window-door-window.glb",
       "/models/buildings/building-sample-tower-c.glb",
       "/models/buildings/building-sample-tower-d.glb",
+      "/models/buildings/building-windows.glb",
     ];
     return buildings[Math.floor(Math.random() * buildings.length)];
   };
