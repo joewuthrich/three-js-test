@@ -10,7 +10,17 @@ export function createCharacter(scene: THREE.Scene) {
   const actions: Record<string, THREE.AnimationAction> = {};
   let current: THREE.AnimationAction | null = null;
 
-  loader.load("/models/characters/character-male-f.glb", (gltf) => {
+  const getRandomCharacter = () => {
+    const characters = [
+      "/models/characters/character-male-f.glb",
+      "/models/characters/character-female-d.glb",
+      "/models/characters/character-male-c.glb",
+    ];
+
+    return characters[Math.floor(Math.random() * characters.length)];
+  };
+
+  loader.load(getRandomCharacter(), (gltf) => {
     const model = gltf.scene;
     model.scale.setScalar(2);
     model.rotation.y = Math.PI;

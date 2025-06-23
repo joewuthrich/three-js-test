@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { createRoad } from "./scene/createRoad";
 import { createBuildings } from "./scene/createBuildings";
 import { createCharacter } from "./character/createCharacter";
@@ -6,6 +5,28 @@ import { createRunnerControls } from "./controls/createControls";
 import { createObstacles } from "./obstacles/createObstacles";
 import { detectCollisions } from "./obstacles/detectCollisions";
 import type { GameState } from "./lib/contants";
+import {
+  Clock,
+  DirectionalLight,
+  HemisphereLight,
+  MathUtils,
+  PerspectiveCamera,
+  Scene,
+  PMREMGenerator,
+  WebGLRenderer,
+} from "three";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+
+const rgbe = new RGBELoader();
+rgbe.load("/sky/kloppenheim_06_puresky_1k.hdr", (hdrTex) => {
+  const pmrem = new PMREMGenerator(renderer);
+  const envMap = pmrem.fromEquirectangular(hdrTex).texture;
+
+  scene.background = envMap;
+  scene.backgroundIntensity = 1.5;
+  hdrTex.dispose();
+  pmrem.dispose();
+});
 
 const state: {
   gameState: GameState;
@@ -15,30 +36,29 @@ const state: {
 } = {
   gameState: "waiting",
   score: 0,
-  highScore: 0,
+  highScore: parseFloat(localStorage.getItem("highscore") || "0"),
   speed: 0.1,
 };
+
+document.getElementById(
+  "highscore"
+)!.textContent = `High Score: ${state.highScore.toFixed(0)}`;
 
 const INTRO_DURATION = 1.5;
 let introTime = 0;
 let outroTime = 0;
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  80,
-  innerWidth / innerHeight,
-  0.1,
-  1000
-);
+const scene = new Scene();
+const camera = new PerspectiveCamera(80, innerWidth / innerHeight, 0.1, 1000);
 camera.position.set(0, 3, 4);
 camera.lookAt(0, 0, 0);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.8));
-const dir = new THREE.DirectionalLight(0xffffff, 1);
+scene.add(new HemisphereLight(0xffffff, 0x444444, 3));
+const dir = new DirectionalLight(0xffffff, 1);
 dir.position.set(5, 10, 2);
 scene.add(dir);
 
@@ -87,9 +107,9 @@ function tickIntro(dt: number) {
   const t = Math.min(introTime / INTRO_DURATION, 1);
   const ease = 1 - Math.pow(1 - t, 3);
 
-  camera.fov = THREE.MathUtils.lerp(80, 60, ease);
+  camera.fov = MathUtils.lerp(80, 60, ease);
   // camera.position.set(0, 3, 4);
-  camera.lookAt(0, THREE.MathUtils.lerp(0, 2, ease), 0);
+  camera.lookAt(0, MathUtils.lerp(0, 2, ease), 0);
 
   camera.updateProjectionMatrix();
 
@@ -104,13 +124,13 @@ function tickOutro(dt: number) {
   const t = Math.min(outroTime / INTRO_DURATION, 1);
   const ease = 1 - Math.pow(1 - t, 3);
 
-  camera.fov = THREE.MathUtils.lerp(60, 80, ease);
-  camera.lookAt(0, THREE.MathUtils.lerp(2, 0, ease), 0);
+  camera.fov = MathUtils.lerp(60, 80, ease);
+  camera.lookAt(0, MathUtils.lerp(2, 0, ease), 0);
 
   camera.updateProjectionMatrix();
 }
 
-const clock = new THREE.Clock();
+const clock = new Clock();
 function loop() {
   const delta = clock.getDelta();
   tickCharacter(delta);
@@ -159,6 +179,8 @@ function loop() {
         document.getElementById(
           "highscore"
         )!.textContent = `High Score: ${state.highScore.toFixed(0)}`;
+
+        localStorage.setItem("highscore", state.highScore.toString());
       }
     }
   });

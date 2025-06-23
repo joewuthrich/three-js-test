@@ -61,6 +61,7 @@ export function createObstacles(
 
       if (tile.position.z > camera.position.z) {
         tile.position.z -= ROAD_TILE_COUNT * 4.8 - 30;
+        tile.position.x = randomLane();
       }
     });
   }
