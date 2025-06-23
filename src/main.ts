@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import { createRoad } from "./scene/createRoad";
 import { createBuildings } from "./scene/createBuildings";
-import { createCharacter } from "./character/character";
-import { createRunnerControls } from "./controls/controls";
+import { createCharacter } from "./character/createCharacter";
+import { createRunnerControls } from "./controls/createControls";
+import { createObstacles } from "./obstacles/createObstacles";
+import { detectCollisions } from "./obstacles/detectCollisions";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -11,7 +13,8 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(0, 2, 4);
+camera.position.set(0, 3, 4);
+camera.lookAt(0, 2, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
@@ -33,6 +36,7 @@ const tickControls = createRunnerControls(
   characterGroup,
   playCharacterAnimation
 );
+const { tick: tickObstacles, obstacles } = createObstacles(scene, camera);
 
 const clock = new THREE.Clock();
 function loop() {
@@ -41,6 +45,9 @@ function loop() {
   tickRoad();
   tickBuildings();
   tickControls(delta);
+  tickObstacles();
+
+  detectCollisions(characterGroup, obstacles);
 
   requestAnimationFrame(loop);
   renderer.render(scene, camera);

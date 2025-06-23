@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { clamp } from "three/src/math/MathUtils.js";
+import { LANES } from "../lib/contants";
 
 type RunnerState = "sprint" | "jump" | "roll";
 
@@ -7,7 +8,6 @@ export function createRunnerControls(
   player: THREE.Object3D,
   play: (n: string) => void
 ) {
-  const LANES = [-2, 0, 2];
   const GRAVITY = 20;
   const FAST_FALL = -35;
   const ROLL_TIME = 0.7;
