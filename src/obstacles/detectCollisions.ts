@@ -17,7 +17,8 @@ export function detectCollisions(
     obstacleBB.setFromObject(obs);
 
     const hitBoxObstacle =
-      obs.userData.type === "/models/obstacles/firetruck.glb"
+      obs.userData.type ===
+      import.meta.env.BASE_URL + "models/obstacles/firetruck.glb"
         ? obstacleBB.clone().expandByVector(new Vector3(0, 1, 0))
         : obstacleBB.clone();
 
